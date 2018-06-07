@@ -16,14 +16,13 @@ import java.util.List;
 
 
 public class UserServlet extends HttpServlet {
-    List<User> listUser = new ArrayList();
 
     private final ValidateService logic = ValidateService.getValidateService();
 
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
         res.setContentType("text/html");
-        Iterator<User> iterator = listUser.iterator();
+        Iterator<User> iterator = logic.findAll(req).iterator();
         while (iterator.hasNext()) {
             res.getWriter().println(iterator.next());
         }
@@ -32,7 +31,7 @@ public class UserServlet extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
         choseAction(req);
-        doGet(req,res);
+        doGet(req, res);
     }
 
     public void choseAction(HttpServletRequest req) {
@@ -54,17 +53,5 @@ public class UserServlet extends HttpServlet {
                     break;
             }
         }
-    }
-
-    public void addUser(HttpServletRequest req) {
-        listUser.add(new User((String) req.getParameter("name")));
-    }
-
-    public void deleteUser(HttpServletRequest req) {
-        listUser.remove(Integer.parseInt(req.getParameter("index")));
-    }
-
-    public void updateUser(HttpServletRequest req) {
-        listUser.get(Integer.parseInt(req.getParameter("index"))).setName((String) req.getParameter("name"));
     }
 }
