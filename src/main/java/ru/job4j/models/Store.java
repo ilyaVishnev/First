@@ -4,13 +4,13 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 public interface Store {
-    public void add(HttpServletRequest req);
+    public void add(User user);
 
-    public boolean update(HttpServletRequest req);
+    public void update(Integer index,String name);
 
-    public boolean delete(HttpServletRequest req);
+    public void delete(Integer index);
 
-    public List findAll(HttpServletRequest req);
+    public List<User> findAll();
 
-    public User findById (HttpServletRequest req) throws Exception;
+    public User findById(Integer index);
 }

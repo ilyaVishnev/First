@@ -7,12 +7,12 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ValidateService {
     private static final ValidateService validateService = new ValidateService();
     private final Store persistent = MemoryStore.getMemoryStore();
     private String message = "";
-    private static final Logger Log = LoggerFactory.getLogger(ValidateService.class);
 
 
     public static ValidateService getValidateService() {
@@ -20,52 +20,54 @@ public class ValidateService {
     }
 
 
-    public void add(HttpServletRequest req) {
-        if (checkNumber(req)) {
-            persistent.add(req);
-        }
+    public void add(User user) {
+        persistent.add(user);
     }
 
-    public boolean update(HttpServletRequest req) {
-        boolean result = true;
-        if (!checkNumber(req)) {
-            result = false;
+    public String update(String index, String name) {
+        if (checkNumber(index) && checkExistence(index)) {
+            persistent.update(Integer.parseInt(index), name);
         }
-        if (!persistent.update(req)) {
-            result = false;
-            Log.error("there isn't such user");
-        }
-        return result;
+        return message;
     }
 
-    public boolean delete(HttpServletRequest req) {
-        boolean result = true;
-        if (!persistent.delete(req)) {
-            result = false;
-            Log.error("there isn't such user");
+    public String delete(String index) {
+        if (checkNumber(index) && checkExistence(index)) {
+            persistent.delete(Integer.parseInt(index));
         }
-        return result;
+        return message;
     }
 
-    public List findAll(HttpServletRequest req) {
-        return persistent.findAll(req);
+    public List<User> findAll() {
+        return persistent.findAll();
     }
 
-    public User findById(HttpServletRequest req) throws Exception {
-        if (!checkNumber(req)) {
-            throw new Exception();
+    public User findById(String index) throws Exception {
+        if (checkNumber(index) && checkExistence(index)) {
+            return persistent.findById(Integer.parseInt(index));
         }
-        return persistent.findById(req);
+        throw new Exception(message);
     }
 
 
-    public boolean checkNumber(HttpServletRequest req) {
+    public boolean checkNumber(String indexS) {
         boolean result = true;
         int index;
         try {
-            index = Integer.parseInt(req.getParameter("index"));
+            index = Integer.parseInt(indexS);
         } catch (Exception ex) {
-            Log.error("index should be a number");
+            message = "index should be a number";
+            result = false;
+        }
+        return result;
+    }
+
+    public boolean checkExistence(String indexS) {
+        boolean result = true;
+        try {
+            User user = this.findAll().get(Integer.parseInt(indexS));
+        } catch (IndexOutOfBoundsException ex) {
+            message = "there isn't such user";
             result = false;
         }
         return result;

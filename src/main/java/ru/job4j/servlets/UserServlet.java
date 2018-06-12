@@ -18,14 +18,16 @@ import java.util.List;
 public class UserServlet extends HttpServlet {
 
     private final ValidateService logic = ValidateService.getValidateService();
+    private String message = "";
 
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
         res.setContentType("text/html");
-        Iterator<User> iterator = logic.findAll(req).iterator();
+        Iterator<User> iterator = logic.findAll().iterator();
         while (iterator.hasNext()) {
             res.getWriter().println(iterator.next());
         }
+        res.getWriter().println(message);
     }
 
     @Override
@@ -36,19 +38,21 @@ public class UserServlet extends HttpServlet {
 
     public void choseAction(HttpServletRequest req) {
         Enumeration action = req.getParameterNames();
+        String name = (String) req.getParameter("name");
+        String index = (String) req.getParameter("index");
         boolean end = true;
         while (action.hasMoreElements() && end) {
             switch ((String) action.nextElement()) {
                 case "add":
-                    logic.add(req);
+                    logic.add(new User(name));
                     end = false;
                     break;
                 case "delete":
-                    logic.delete(req);
+                    message = logic.delete(index);
                     end = false;
                     break;
                 case "update":
-                    logic.update(req);
+                    message = logic.update(index, name);
                     end = false;
                     break;
             }

@@ -15,45 +15,27 @@ public class MemoryStore implements Store {
 
 
     @Override
-    public void add(HttpServletRequest req) {
-        users.add(new User((String) req.getParameter("name")));
+    public void add(User user) {
+        users.add(user);
     }
 
     @Override
-    public boolean update(HttpServletRequest req){
-        boolean result=true;
-        try {
-            findById(req);
-        }catch (Exception ex){
-            result=false;
-        }
-        users.get(Integer.parseInt(req.getParameter("index"))).setName((String) req.getParameter("name"));
-        return result;
+    public void update(Integer index, String name) {
+        users.set(index, new User(name));
     }
 
     @Override
-    public boolean delete(HttpServletRequest req)  {
-        boolean result=true;
-        try {
-            findById(req);
-        }catch (Exception ex){
-            result=false;
-        }
-        users.remove(Integer.parseInt(req.getParameter("index")));
-        return result;
+    public void delete(Integer index) {
+        users.remove(findById(index));
     }
 
     @Override
-    public List findAll(HttpServletRequest req) {
+    public List<User> findAll() {
         return users;
     }
 
     @Override
-    public User findById(HttpServletRequest req) throws MyException {
-        User user = users.get(Integer.parseInt(req.getParameter("index")));
-        if (user == null) {
-            throw new MyException("there isn't such user");
-        }
-        return user;
+    public User findById(Integer index) {
+        return users.get(index);
     }
 }
