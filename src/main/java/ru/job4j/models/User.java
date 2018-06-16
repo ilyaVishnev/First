@@ -13,6 +13,7 @@ public class User {
     public User(String name) {
         this.name = name;
         this.id = count++;
+        createDate = new Date();
     }
 
     public int getId() {
