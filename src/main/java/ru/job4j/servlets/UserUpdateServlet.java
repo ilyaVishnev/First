@@ -11,12 +11,11 @@ import java.io.PrintWriter;
 
 public class UserUpdateServlet extends HttpServlet {
     private final ValidateService logic = ValidateService.getValidateService();
-    User user = null;
 
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
         res.setContentType("text/html;charset=Windows-1251");
-
+        User user = null;
         PrintWriter printWriter = new PrintWriter(res.getOutputStream());
         try {
             user = logic.findById(req.getParameter("id"));
@@ -35,6 +34,7 @@ public class UserUpdateServlet extends HttpServlet {
                 "    <p>Введите имя пользователя : <input type=\"text\" name=\"name\" value=" + user.getName() + "></p>\n" +
                 "    <p>Введите логин пользователя : <input type=\"text\" name=\"login\" value=" + user.getLogin() + "></p>\n" +
                 "    <p>Введите e-mail пользователя : <input type=\"text\" name=\"email\"  value=" + user.getEmail() + "></p>\n" +
+                "<input type=\"hidden\" name=\"id\" value=\"" + user.getId() + "\">" +
                 "    <input type=\"submit\" value=\"Сохранить\" name=\"update\">\n" +
                 "</form>" +
                 "</body>\n" +
@@ -44,6 +44,12 @@ public class UserUpdateServlet extends HttpServlet {
 
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
+        User user = null;
+        try {
+            user = logic.findById(req.getParameter("id"));
+        } catch (Exception ex) {
+            ex.getMessage();
+        }
         user.setName(req.getParameter("name"));
         user.setLogin(req.getParameter("login"));
         user.setEmail(req.getParameter("email"));
