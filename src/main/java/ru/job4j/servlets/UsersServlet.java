@@ -17,34 +17,6 @@ public class UsersServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
         res.setContentType("text/html;charset=Windows-1251");
-        Iterator<User> iterator = logic.findAll().iterator();
-        PrintWriter printWriter = new PrintWriter(res.getOutputStream());
-        StringBuilder stringBuilder = new StringBuilder("<table>");
-        while (iterator.hasNext()) {
-            User user = iterator.next();
-            stringBuilder.append("<tr><td><p>" + "<form action=\"edit\" method=\"get\">" +
-                    "<input type=\"hidden\" name=\"id\" value=\"" + user.getId() + "\">" +
-                    "<p><input type=\"submit\" value=\"Редактировать\" name=\"update\"> </p>" +
-                    "</form></p>" + "<p>" + "<form action=\"list\" method=\"post\">" +
-                    "<input type=\"hidden\" name=\"id\" value=\"" + user.getId() + "\">" +
-                    "<p><input type=\"submit\" value=\"Удалить\" name=\"del\"> </p>" +
-                    "</form></p></td><td>" + user + "</td></tr>");
-        }
-        stringBuilder.append("</table>");
-        printWriter.append("<!DOCTYPE html>\n" +
-                "<html lang=\"en\">\n" +
-                "<head>\n" +
-                "    <meta charset=\"UTF-8\">\n" +
-                "    <title>Title</title>\n" +
-                "</head>\n" +
-                "<body>\n" + stringBuilder +
-                "\n" +
-                "<form action=\"create\" method=\"get\">" +
-                "<p><input type=\"submit\" value=\"Создать пользователя\" name=\"create\"> </p>" +
-                "</form>" +
-                "</body>\n" +
-                "</html>");
-        printWriter.flush();
     }
 
     @Override
@@ -53,6 +25,6 @@ public class UsersServlet extends HttpServlet {
         if (delete != null) {
             logic.delete(req.getParameter("id"));
         }
-        doGet(req, res);
+        res.sendRedirect(String.format("%s/list.jsp",req.getContextPath()));
     }
 }
