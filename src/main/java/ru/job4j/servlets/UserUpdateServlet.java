@@ -53,7 +53,7 @@ public class UserUpdateServlet extends HttpServlet {
         user.setName(req.getParameter("name"));
         user.setLogin(req.getParameter("login"));
         user.setEmail(req.getParameter("email"));
-        logic.findAll().set(user.getId(), user);
+        logic.update(user);
         doGet(req, res);
     }
 }

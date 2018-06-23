@@ -16,6 +16,9 @@ public class User {
         createDate = new Date();
     }
 
+    public User() {
+    }
+
     public int getId() {
         return id;
     }

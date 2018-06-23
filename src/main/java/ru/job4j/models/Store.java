@@ -6,7 +6,7 @@ import java.util.List;
 public interface Store {
     public void add(User user);
 
-    public void update(Integer index,String name);
+    public void update(User user);
 
     public void delete(Integer index);
 

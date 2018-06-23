@@ -11,7 +11,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ValidateService {
     private static final ValidateService validateService = new ValidateService();
-    private final Store persistent = MemoryStore.getMemoryStore();
+    //private final Store persistent = MemoryStore.getMemoryStore();
+    private final Store persistent = DBStore.getDBStore();
     private String message = "";
 
 
@@ -24,9 +25,9 @@ public class ValidateService {
         persistent.add(user);
     }
 
-    public String update(String index, String name) {
-        if (checkNumber(index) && checkExistence(index)) {
-            persistent.update(Integer.parseInt(index), name);
+    public String update(User user) {
+        if (checkNumber(String.valueOf(user.getId())) && checkExistence(String.valueOf(user.getId()))) {
+            persistent.update(user);
         }
         return message;
     }
