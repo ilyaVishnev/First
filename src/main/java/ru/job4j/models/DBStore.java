@@ -43,24 +43,6 @@ public class DBStore implements Store {
         return source;
     }
 
-    public Connection getConnection() {
-        try {
-            Class.forName("org.postgresql.Driver");
-
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        Connection connection = null;
-        try {
-            connection = DriverManager.getConnection(
-                    "jdbc:postgresql://localhost:5432/users", "postgres",
-                    "pobeda");
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return connection;
-    }
 
     private List<User> users = new CopyOnWriteArrayList();
 

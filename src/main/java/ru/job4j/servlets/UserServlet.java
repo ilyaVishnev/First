@@ -32,11 +32,11 @@ public class UserServlet extends HttpServlet {
 
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
-        choseAction(req);
+       // choseAction(req);
         doGet(req, res);
     }
 
-    public void choseAction(HttpServletRequest req) {
+/*    public void choseAction(HttpServletRequest req) {
         Enumeration action = req.getParameterNames();
         String name = (String) req.getParameter("name");
         String index = (String) req.getParameter("index");
@@ -52,10 +52,10 @@ public class UserServlet extends HttpServlet {
                     end = false;
                     break;
                 case "update":
-                    message = logic.update(index, name);
+                    message = logic.update(index);
                     end = false;
                     break;
             }
         }
-    }
+    }*/
 }

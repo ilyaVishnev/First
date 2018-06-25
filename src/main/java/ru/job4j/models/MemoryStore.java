@@ -20,8 +20,8 @@ public class MemoryStore implements Store {
     }
 
     @Override
-    public void update(Integer index, String name) {
-        users.set(index, new User(name));
+    public void update(User user) {
+        users.set(user.getId(), user);
     }
 
     @Override

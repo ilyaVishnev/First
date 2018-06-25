@@ -3,20 +3,26 @@ package ru.job4j.servlets;
 import ru.job4j.models.User;
 import ru.job4j.models.ValidateService;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.rmi.ServerException;
 import java.util.Iterator;
 
-public class UsersServlet extends HttpServlet {
+public class UsersController extends HttpServlet {
 
     private final ValidateService logic = ValidateService.getValidateService();
 
     @Override
-    public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
+    public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
         res.setContentType("text/html;charset=Windows-1251");
+        req.setAttribute("myusers", logic.findAll());
+        RequestDispatcher dispatcher = req.getRequestDispatcher("/WEB-INF/views/listView.jsp");
+        dispatcher.forward(req, res);
     }
 
     @Override
@@ -25,6 +31,6 @@ public class UsersServlet extends HttpServlet {
         if (delete != null) {
             logic.delete(req.getParameter("id"));
         }
-        res.sendRedirect(String.format("%s/list.jsp",req.getContextPath()));
+        res.sendRedirect(String.format("%s/", req.getContextPath()));
     }
 }
