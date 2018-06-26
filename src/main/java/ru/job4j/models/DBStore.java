@@ -27,7 +27,7 @@ public class DBStore implements Store {
         return dbStore;
     }
 
-    private PGPoolingDataSource source;
+    private PGPoolingDataSource source = this.getDataSource();
 
     private PGPoolingDataSource getDataSource() {
         if (source == null) {
@@ -44,10 +44,8 @@ public class DBStore implements Store {
     }
 
 
-    private List<User> users = new CopyOnWriteArrayList();
-
     public void add(User user) {
-        try (Connection connection = this.getDataSource().getConnection();
+        try (Connection connection = source.getConnection();
              PreparedStatement pstmt = connection.prepareStatement("insert into myuser(id, name, login, email) values(?,?,?,?)");) {
             try {
                 pstmt.setInt(1, user.getId());
@@ -66,7 +64,7 @@ public class DBStore implements Store {
     }
 
     public void update(User user) {
-        try (Connection connection = this.getDataSource().getConnection();
+        try (Connection connection = source.getConnection();
              PreparedStatement pstmt = connection.prepareStatement("update myuser set name = ?, login = ?, email = ? where id = ?");) {
             try {
                 pstmt.setString(1, user.getName());
@@ -85,7 +83,7 @@ public class DBStore implements Store {
     }
 
     public void delete(Integer index) {
-        try (Connection connection = this.getDataSource().getConnection();
+        try (Connection connection = source.getConnection();
              PreparedStatement pstmt = connection.prepareStatement("DELETE FROM myuser WHERE id=?");) {
             try {
                 pstmt.setInt(1, index);
@@ -101,8 +99,8 @@ public class DBStore implements Store {
     }
 
     public List<User> findAll() {
-        users.clear();
-        try (Connection connection = this.getDataSource().getConnection();
+        List<User> users = new CopyOnWriteArrayList();
+        try (Connection connection = source.getConnection();
              PreparedStatement pstmt = connection.prepareStatement("SELECT * FROM myuser");) {
             try (ResultSet resultSet = pstmt.executeQuery();) {
                 User user = null;
@@ -128,7 +126,7 @@ public class DBStore implements Store {
 
     public User findById(Integer index) {
         User user = null;
-        try (Connection connection = this.getDataSource().getConnection();
+        try (Connection connection = source.getConnection();
              PreparedStatement pstmt = connection.prepareStatement("SELECT * FROM myuser WHERE id=?");
         ) {
             pstmt.setInt(1, index);
