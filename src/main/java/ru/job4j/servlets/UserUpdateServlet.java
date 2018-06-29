@@ -18,15 +18,17 @@ public class UserUpdateServlet extends HttpServlet {
         res.setContentType("text/html;charset=Windows-1251");
         User user = null;
         PrintWriter printWriter = new PrintWriter(res.getOutputStream());
+        String message = "";
         try {
             user = logic.findById(req.getParameter("id"));
         } catch (Exception ex) {
             ex.getMessage();
+            message = ex.getMessage();
         }
         printWriter.append("<!DOCTYPE html>\n" +
                 "<html lang=\"en\">\n" +
                 "<head>\n" +
-                "    <meta charset=\"UTF-8\">\n" +
+                "    <meta charset=\"UTF-8\">\n" + message +
                 "    <title>Title</title>\n" +
                 "</head>\n" +
                 "<body>\n" +
@@ -34,6 +36,7 @@ public class UserUpdateServlet extends HttpServlet {
                 "<form action=\"edit\" method=\"post\">\n" +
                 "    <p>Введите имя пользователя : <input type=\"text\" name=\"name\" value=" + user.getName() + "></p>\n" +
                 "    <p>Введите логин пользователя : <input type=\"text\" name=\"login\" value=" + user.getLogin() + "></p>\n" +
+                "    <p>Введите пароль пользователя : <input type=\"text\" name=\"password\" value=" + user.getPassword() + "></p>\n" +
                 "    <p>Введите e-mail пользователя : <input type=\"text\" name=\"email\"  value=" + user.getEmail() + "></p>\n" +
                 "<input type=\"hidden\" name=\"id\" value=\"" + user.getId() + "\">" +
                 "    <input type=\"submit\" value=\"Сохранить\" name=\"update\">\n" +
@@ -53,6 +56,7 @@ public class UserUpdateServlet extends HttpServlet {
         }
         user.setName(req.getParameter("name"));
         user.setLogin(req.getParameter("login"));
+        user.setPassword(req.getParameter("password"));
         user.setEmail(req.getParameter("email"));
         logic.update(user);
         doGet(req, res);
