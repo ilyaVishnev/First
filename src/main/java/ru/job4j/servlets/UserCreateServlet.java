@@ -26,7 +26,12 @@ public class UserCreateServlet extends HttpServlet {
                 "\n" +
                 "<form action=\"create\" method=\"post\">\n" +
                 "    <p>Введите имя пользователя : <input type=\"text\" name=\"name\"></p>\n" +
+                "    <p>Введите роль пользователя : <select name=\"role\"></p>\n" +
+                "    <option value=\"user\">user</option>\n" +
+                "    <option value=\"admin\">admin</option>\n" +
+                "    </select>\n" +
                 "    <p>Введите логин пользователя : <input type=\"text\" name=\"login\"></p>\n" +
+                "    <p>Введите пароль пользователя : <input type=\"text\" name=\"password\"></p>\n" +
                 "    <p>Введите e-mail пользователя : <input type=\"text\" name=\"email\"></p>\n" +
                 "    <input type=\"submit\" value=\"Создать\" name=\"create\">\n" +
                 "</form>" +
@@ -38,7 +43,9 @@ public class UserCreateServlet extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
         User user = new User(req.getParameter("name"));
+        user.setRole(req.getParameter("role"));
         user.setLogin(req.getParameter("login"));
+        user.setPassword(req.getParameter("password"));
         user.setEmail(req.getParameter("email"));
         logic.add(user);
         doGet(req, res);

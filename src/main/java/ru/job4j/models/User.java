@@ -4,9 +4,11 @@ import java.util.Date;
 
 public class User {
     private int id;
-    private static int count = 0;
+    private static int count = 1;
     private String name;
+    private String role;
     private String login;
+    private String password;
     private String email;
     private Date createDate;
 
@@ -57,6 +59,22 @@ public class User {
 
     public void setCreateDate(Date createDate) {
         this.createDate = createDate;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public String getRole() {
+        return role;
     }
 
     @Override

@@ -20,6 +20,9 @@ public class ValidateService {
         return validateService;
     }
 
+    public String getMessage() {
+        return message;
+    }
 
     public void add(User user) {
         persistent.add(user);
@@ -74,7 +77,15 @@ public class ValidateService {
         return result;
     }
 
-    public String getMessage() {
-        return message;
+    public int isCredential(String login, String password) {
+        int id = -1;
+        for (User user : this.findAll()) {
+            if (user.getPassword().equals(password) && user.getLogin().equals(login)) {
+                id = user.getId();
+                break;
+            }
+        }
+        return id;
     }
+
 }

@@ -25,6 +25,18 @@ public class UserUpdateServlet extends HttpServlet {
             ex.getMessage();
             message = ex.getMessage();
         }
+        String choice = "";
+        if (user.getRole().equals("user")) {
+            choice = "    <option value=\"user\">user</option>\n" +
+                    "    <option value=\"admin\">admin</option>\n";
+        } else {
+            choice = "    <option value=\"admin\">admin</option>\n" +
+                    "    <option value=\"user\">user</option>\n";
+        }
+        User observer = (User) req.getSession().getAttribute("myuser");
+        if (observer.getRole().equals("user")) {
+            choice = "    <option value=\"user\">user</option>\n";
+        }
         printWriter.append("<!DOCTYPE html>\n" +
                 "<html lang=\"en\">\n" +
                 "<head>\n" +
@@ -35,6 +47,9 @@ public class UserUpdateServlet extends HttpServlet {
                 "\n" +
                 "<form action=\"edit\" method=\"post\">\n" +
                 "    <p>Введите имя пользователя : <input type=\"text\" name=\"name\" value=" + user.getName() + "></p>\n" +
+                "    <p>Введите роль пользователя : <select name=\"role\"></p>\n" +
+                choice +
+                "    </select>\n" +
                 "    <p>Введите логин пользователя : <input type=\"text\" name=\"login\" value=" + user.getLogin() + "></p>\n" +
                 "    <p>Введите пароль пользователя : <input type=\"text\" name=\"password\" value=" + user.getPassword() + "></p>\n" +
                 "    <p>Введите e-mail пользователя : <input type=\"text\" name=\"email\"  value=" + user.getEmail() + "></p>\n" +
@@ -55,6 +70,7 @@ public class UserUpdateServlet extends HttpServlet {
             ex.getMessage();
         }
         user.setName(req.getParameter("name"));
+        user.setRole(req.getParameter("role"));
         user.setLogin(req.getParameter("login"));
         user.setPassword(req.getParameter("password"));
         user.setEmail(req.getParameter("email"));

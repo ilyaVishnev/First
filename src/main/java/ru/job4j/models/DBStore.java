@@ -46,12 +46,14 @@ public class DBStore implements Store {
 
     public void add(User user) {
         try (Connection connection = source.getConnection();
-             PreparedStatement pstmt = connection.prepareStatement("insert into myuser(id, name, login, email) values(?,?,?,?)");) {
+             PreparedStatement pstmt = connection.prepareStatement("insert into myuser(id, name,role, login, password, email) values(?,?,?,?,?,?)");) {
             try {
                 pstmt.setInt(1, user.getId());
                 pstmt.setString(2, user.getName());
-                pstmt.setString(3, user.getLogin());
-                pstmt.setString(4, user.getEmail());
+                pstmt.setString(3, user.getRole());
+                pstmt.setString(4, user.getLogin());
+                pstmt.setString(5, user.getPassword());
+                pstmt.setString(6, user.getEmail());
                 pstmt.addBatch();
                 pstmt.execute();
             } catch (Exception e) {
@@ -65,12 +67,14 @@ public class DBStore implements Store {
 
     public void update(User user) {
         try (Connection connection = source.getConnection();
-             PreparedStatement pstmt = connection.prepareStatement("update myuser set name = ?, login = ?, email = ? where id = ?");) {
+             PreparedStatement pstmt = connection.prepareStatement("update myuser set name = ?,role = ?, login = ?,password=?, email = ? where id = ?");) {
             try {
                 pstmt.setString(1, user.getName());
-                pstmt.setString(2, user.getLogin());
-                pstmt.setString(3, user.getEmail());
-                pstmt.setInt(4, user.getId());
+                pstmt.setString(2, user.getRole());
+                pstmt.setString(3, user.getLogin());
+                pstmt.setString(4, user.getPassword());
+                pstmt.setString(5, user.getEmail());
+                pstmt.setInt(6, user.getId());
                 pstmt.addBatch();
                 pstmt.execute();
             } catch (Exception e) {
@@ -107,10 +111,12 @@ public class DBStore implements Store {
                 while (resultSet.next()) {
                     user = new User();
                     user.setId(resultSet.getInt(1));
-                    user.setName(resultSet.getString(2));
-                    user.setLogin(resultSet.getString(3));
-                    user.setEmail(resultSet.getString(4));
-                    user.setCreateDate(resultSet.getDate(5));
+                    user.setRole(resultSet.getString(2));
+                    user.setName(resultSet.getString(3));
+                    user.setLogin(resultSet.getString(4));
+                    user.setPassword(resultSet.getString(5));
+                    user.setEmail(resultSet.getString(6));
+                    user.setCreateDate(resultSet.getDate(7));
                     users.add(user);
                 }
 
@@ -136,10 +142,12 @@ public class DBStore implements Store {
                 while (resultSet.next()) {
                     user = new User();
                     user.setId(resultSet.getInt(1));
-                    user.setName(resultSet.getString(2));
-                    user.setLogin(resultSet.getString(3));
-                    user.setEmail(resultSet.getString(4));
-                    user.setCreateDate(resultSet.getDate(5));
+                    user.setRole(resultSet.getString(2));
+                    user.setName(resultSet.getString(3));
+                    user.setLogin(resultSet.getString(4));
+                    user.setPassword(resultSet.getString(5));
+                    user.setEmail(resultSet.getString(6));
+                    user.setCreateDate(resultSet.getDate(7));
                 }
             } catch (Exception e) {
                 connection.rollback();
