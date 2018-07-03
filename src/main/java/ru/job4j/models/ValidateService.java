@@ -14,6 +14,7 @@ public class ValidateService {
     //private final Store persistent = MemoryStore.getMemoryStore();
     private final Store persistent = DBStore.getDBStore();
     private String message = "";
+    private User myUser;
 
 
     public static ValidateService getValidateService() {
@@ -77,15 +78,8 @@ public class ValidateService {
         return result;
     }
 
-    public int isCredential(String login, String password) {
-        int id = -1;
-        for (User user : this.findAll()) {
-            if (user.getPassword().equals(password) && user.getLogin().equals(login)) {
-                id = user.getId();
-                break;
-            }
-        }
-        return id;
+    public User isCredential(String login, String password) {
+        return persistent.isCredential(login, password);
     }
 
 }

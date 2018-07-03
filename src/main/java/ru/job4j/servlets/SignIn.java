@@ -26,20 +26,14 @@ public class SignIn extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String login = req.getParameter("login");
         String password = req.getParameter("password");
-        int id = logic.isCredential(login, password);
-        if (id != -1) {
-            HttpSession session = req.getSession();
-            User user = null;
-            try {
-                user = logic.findById(String.valueOf(id));
-            } catch (Exception ex) {
-                ex.getMessage();
-            }
-            session.setAttribute("myuser", user);
-            resp.sendRedirect(String.format("%s/", req.getContextPath()));
-        } else {
+        User user = logic.isCredential(login, password);
+        if (user == null) {
             req.setAttribute("error", "dont have such user");
             doGet(req, resp);
+        } else {
+            HttpSession session = req.getSession();
+            session.setAttribute("myuser", user);
+            resp.sendRedirect(String.format("%s/", req.getContextPath()));
         }
     }
 }

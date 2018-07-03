@@ -13,4 +13,6 @@ public interface Store {
     public List<User> findAll();
 
     public User findById(Integer index);
+
+    public User isCredential(String login, String password);
 }

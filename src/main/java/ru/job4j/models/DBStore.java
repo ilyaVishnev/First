@@ -158,4 +158,35 @@ public class DBStore implements Store {
         }
         return user;
     }
+
+    @Override
+    public User isCredential(String login, String password) {
+        User user = null;
+        try (Connection connection = source.getConnection();
+             PreparedStatement pstmt = connection.prepareStatement("SELECT * FROM myuser WHERE login=? AND password=?");
+        ) {
+            pstmt.setString(1, login);
+            pstmt.setString(2, password);
+            pstmt.addBatch();
+            pstmt.execute();
+            try (ResultSet resultSet = pstmt.executeQuery();) {
+                while (resultSet.next()) {
+                    user = new User();
+                    user.setId(resultSet.getInt(1));
+                    user.setRole(resultSet.getString(2));
+                    user.setName(resultSet.getString(3));
+                    user.setLogin(resultSet.getString(4));
+                    user.setPassword(resultSet.getString(5));
+                    user.setEmail(resultSet.getString(6));
+                    user.setCreateDate(resultSet.getDate(7));
+                }
+            } catch (Exception e) {
+                connection.rollback();
+                e.printStackTrace();
+            }
+        } catch (SQLException ex) {
+            ex.getMessage();
+        }
+        return user;
+    }
 }
