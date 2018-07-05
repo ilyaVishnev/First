@@ -86,7 +86,7 @@ public class User {
         if (getClass() != obj.getClass())
             return false;
         User other = (User) obj;
-        return this.id == other.id;
+        return this.getLogin().equals(other.getLogin()) && this.getPassword().equals(other.getPassword());
     }
 
     @Override
