@@ -20,7 +20,7 @@
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
-    <servlet>
+<!--    <servlet>
         <servlet-name>UsersController</servlet-name>
         <servlet-class>ru.job4j.servlets.UsersController</servlet-class>
         <init-param>
@@ -28,7 +28,7 @@
             <param-value>true</param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
-    </servlet>
+    </servlet>-->
     <servlet>
         <servlet-name>UserCreateServlet</servlet-name>
         <servlet-class>ru.job4j.servlets.UserCreateServlet</servlet-class>
@@ -48,6 +48,15 @@
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet>
+        <servlet-name>PeopleServlet</servlet-name>
+        <servlet-class>ru.job4j.servlets.PeopleServlet</servlet-class>
+        <init-param>
+            <param-name>debug</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet>
         <servlet-name>SignIn</servlet-name>
         <servlet-class>ru.job4j.servlets.SignIn</servlet-class>
         <init-param>
@@ -56,13 +65,17 @@
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
-    <servlet-mapping>
+ <!--   <servlet-mapping>
         <servlet-name>UsersController</servlet-name>
         <url-pattern>/</url-pattern>
-    </servlet-mapping>
+    </servlet-mapping>-->
     <servlet-mapping>
         <servlet-name>SignIn</servlet-name>
         <url-pattern>/signin</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PeopleServlet</servlet-name>
+        <url-pattern>/people</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>UserCreateServlet</servlet-name>
@@ -80,13 +93,13 @@
         <servlet-name>UserServlet</servlet-name>
         <url-pattern>/users</url-pattern>
     </servlet-mapping>
-    <filter>
+<!--    <filter>
         <filter-name>UserInFilter</filter-name>
         <filter-class>ru.job4j.servlets.UserInFilter</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>UserInFilter</filter-name>
         <url-pattern>*</url-pattern>
-    </filter-mapping>
+    </filter-mapping>-->
 
 </web-app>

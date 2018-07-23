@@ -7,7 +7,30 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script import="ru.job4j.models.Person"></script>
     <script>
+        function createJson() {
+            var control = document.getElementsByClassName('form-control');
+            var content = '{\n';
+            content += '\"name\": ' + '\"' + control[0].value + '\"' + ',\n \"firstName\": ' + '\"' + control[1].value + '\"' + ',\n \"sex\": ' + '\"' + control[2].value + '\"' + ',\n \"description\": ' + '\"' + control[3].value + '\"';
+            content += '}';
+            return content;
+        }
+        function sendJson() {
+            var jsonStr = createJson();
+            $.ajax({
+                type: 'POST',
+                url: '/people',
+                data: jsonStr,
+                success: function (text) {
+                    var array = text.array;
+                    var content = '<tr>' + '<td>' + array[array.length - 1].name + '</td>' + '<td>' + array[array.length - 1].firstName + '</td>' + '<td>' + array[array.length - 1].sex + '</td>' + '<td>' + array[array.length - 1].description + '</td>' + '</tr>';
+                    $('.table tr:last').after(content);
+                },
+                dataType: 'json'
+            });
+            return false;
+        }
         function validate() {
             var control = document.getElementsByClassName('form-control');
             for (var i = 0; i < control.length; i++) {
@@ -16,7 +39,7 @@
                     return false;
                 }
             }
-            return false;
+            return true;
         }
         function addRow() {
             var control = document.getElementsByClassName('form-control');
@@ -52,8 +75,12 @@
         </div>
         <button type="submit" class="btn btn-default" onclick="return validate();">Submit</button>
         <div>
-            </br>
+            <br/>
             <button type="submit" class="btn btn-default" onclick="return addRow();">AddRow</button>
+        </div>
+        <div>
+            <br/>
+            <button type="submit" class="btn btn-default" onclick="return sendJson();">Send</button>
         </div>
     </form>
 </div>
