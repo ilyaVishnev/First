@@ -15,4 +15,8 @@ public interface Store {
     public User findById(Integer index);
 
     public User isCredential(String login, String password);
+
+    public List<Country> getListOfCounries();
+
+    public List<City> getListOfCities();
 }

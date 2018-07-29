@@ -46,7 +46,7 @@ public class DBStore implements Store {
 
     public void add(User user) {
         try (Connection connection = source.getConnection();
-             PreparedStatement pstmt = connection.prepareStatement("insert into myuser(id, name,role, login, password, email) values(?,?,?,?,?,?)");) {
+             PreparedStatement pstmt = connection.prepareStatement("insert into myuser(id, name,role, login, password, email,country,city) values(?,?,?,?,?,?,?,?)");) {
             try {
                 pstmt.setInt(1, user.getId());
                 pstmt.setString(2, user.getName());
@@ -54,6 +54,8 @@ public class DBStore implements Store {
                 pstmt.setString(4, user.getLogin());
                 pstmt.setString(5, user.getPassword());
                 pstmt.setString(6, user.getEmail());
+                pstmt.setString(7, user.getCountry());
+                pstmt.setString(8, user.getCity());
                 pstmt.addBatch();
                 pstmt.execute();
             } catch (Exception e) {
@@ -67,14 +69,16 @@ public class DBStore implements Store {
 
     public void update(User user) {
         try (Connection connection = source.getConnection();
-             PreparedStatement pstmt = connection.prepareStatement("update myuser set name = ?,role = ?, login = ?,password=?, email = ? where id = ?");) {
+             PreparedStatement pstmt = connection.prepareStatement("update myuser set name = ?,role = ?, login = ?,password=?, email = ?,country = ?,city = ? where id = ?");) {
             try {
                 pstmt.setString(1, user.getName());
                 pstmt.setString(2, user.getRole());
                 pstmt.setString(3, user.getLogin());
                 pstmt.setString(4, user.getPassword());
                 pstmt.setString(5, user.getEmail());
-                pstmt.setInt(6, user.getId());
+                pstmt.setString(6, user.getCountry());
+                pstmt.setString(7, user.getCity());
+                pstmt.setInt(8, user.getId());
                 pstmt.addBatch();
                 pstmt.execute();
             } catch (Exception e) {
@@ -117,6 +121,8 @@ public class DBStore implements Store {
                     user.setPassword(resultSet.getString(5));
                     user.setEmail(resultSet.getString(6));
                     user.setCreateDate(resultSet.getDate(7));
+                    user.setCountry(resultSet.getString(8));
+                    user.setCity(resultSet.getString(9));
                     users.add(user);
                 }
 
@@ -148,6 +154,8 @@ public class DBStore implements Store {
                     user.setPassword(resultSet.getString(5));
                     user.setEmail(resultSet.getString(6));
                     user.setCreateDate(resultSet.getDate(7));
+                    user.setCountry(resultSet.getString(8));
+                    user.setCity(resultSet.getString(9));
                 }
             } catch (Exception e) {
                 connection.rollback();
@@ -179,6 +187,8 @@ public class DBStore implements Store {
                     user.setPassword(resultSet.getString(5));
                     user.setEmail(resultSet.getString(6));
                     user.setCreateDate(resultSet.getDate(7));
+                    user.setCountry(resultSet.getString(8));
+                    user.setCity(resultSet.getString(9));
                 }
             } catch (Exception e) {
                 connection.rollback();
@@ -189,4 +199,50 @@ public class DBStore implements Store {
         }
         return user;
     }
+
+    public List<Country> getListOfCounries() {
+        List<Country> countries = new CopyOnWriteArrayList();
+        try (Connection connection = source.getConnection();
+             PreparedStatement pstmt = connection.prepareStatement("SELECT * FROM countries");) {
+            try (ResultSet resultSet = pstmt.executeQuery();) {
+                Country country = null;
+                while (resultSet.next()) {
+                    country = new Country();
+                    country.setId(resultSet.getInt(1));
+                    country.setCountry(resultSet.getString(2));
+                    countries.add(country);
+                }
+            } catch (Exception e) {
+                connection.rollback();
+                e.printStackTrace();
+            }
+        } catch (SQLException ex) {
+            ex.getMessage();
+        }
+        return countries;
+    }
+
+    public List<City> getListOfCities() {
+        List<City> cities = new CopyOnWriteArrayList();
+        try (Connection connection = source.getConnection();
+             PreparedStatement pstmt = connection.prepareStatement("SELECT * FROM cities");) {
+            try (ResultSet resultSet = pstmt.executeQuery();) {
+                City city = null;
+                while (resultSet.next()) {
+                    city = new City();
+                    city.setId(resultSet.getInt(1));
+                    city.setCity(resultSet.getString(2));
+                    city.setId_country(resultSet.getInt(3));
+                    cities.add(city);
+                }
+            } catch (Exception e) {
+                connection.rollback();
+                e.printStackTrace();
+            }
+        } catch (SQLException ex) {
+            ex.getMessage();
+        }
+        return cities;
+    }
+
 }

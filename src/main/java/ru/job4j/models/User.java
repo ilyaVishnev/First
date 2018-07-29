@@ -11,6 +11,8 @@ public class User {
     private String password;
     private String email;
     private Date createDate;
+    private String country;
+    private String city;
 
     public User(String name) {
         this.name = name;
@@ -75,6 +77,22 @@ public class User {
 
     public String getRole() {
         return role;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
     }
 
     @Override

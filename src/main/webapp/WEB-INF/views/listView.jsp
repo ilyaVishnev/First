@@ -14,6 +14,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <title>Users</title>
 </head>
 <body>
@@ -24,15 +26,15 @@
                 <c:if test="${myuser.getRole().equals('admin') || myuser.getId()==user.getId()}">
                     <p>
                         <form action="${pageContext.servletContext.contextPath}/edit" method="get">
-                            <input type="hidden" name="id" value="${user.getId()}">
-                    <p><input type="submit" value="Редактировать" name="update">
+                            <input type="hidden" name="id" value="${user.getId()}" class="form-control">
+                    <p><input type="submit" value="Редактировать" name="update"class="btn btn-default">
                     </p>
                     </form>
                     </p>
                     <p>
                         <form action="${pageContext.servletContext.contextPath}/" method="post">
-                            <input type="hidden" name="id" value="${user.getId()}">
-                    <p><input type="submit" value="Удалить" name="del">
+                            <input type="hidden" name="id" value="${user.getId()}" class="form-control">
+                    <p><input type="submit" value="Удалить" name="del"class="btn btn-default">
                     </p>
                     </form>
                     </p>
@@ -45,12 +47,12 @@
 </table>
 <c:if test="${myuser.getRole().equals('admin')}">
     <form action="${pageContext.servletContext.contextPath}/create" method="get">
-        <p><input type="submit" value="Создать пользователя" name="create"></p>
+        <p><input type="submit" value="Создать пользователя" name="create" class="btn btn-default"></p>
     </form>
 </c:if>
 </br>
 <form action="${pageContext.servletContext.contextPath}/signin" method="get">
-    <p><input type="submit" value="выход" name="exit"></p>
+    <p><input type="submit" value="выход" name="exit"class="btn btn-default"></p>
 </form>
 </body>
 </html>
