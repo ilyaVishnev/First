@@ -1,27 +1,19 @@
 package ru.job4j.models;
 
+import org.postgresql.ds.PGPoolingDataSource;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.DriverManager;
-
-import org.apache.commons.dbcp2.BasicDataSource;
-import org.postgresql.ds.PGPoolingDataSource;
-
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.sql.DataSource;
+import java.util.logging.Logger;
 
 public class DBStore implements Store {
 
     private static final DBStore dbStore = new DBStore();
+    private static Logger log = Logger.getLogger(DBStore.class.getName());
 
     public static DBStore getDBStore() {
         return dbStore;
@@ -47,91 +39,69 @@ public class DBStore implements Store {
     public void add(User user) {
         try (Connection connection = source.getConnection();
              PreparedStatement pstmt = connection.prepareStatement("insert into myuser(id, name,role, login, password, email,country,city) values(?,?,?,?,?,?,?,?)");) {
-            try {
-                pstmt.setInt(1, user.getId());
-                pstmt.setString(2, user.getName());
-                pstmt.setString(3, user.getRole());
-                pstmt.setString(4, user.getLogin());
-                pstmt.setString(5, user.getPassword());
-                pstmt.setString(6, user.getEmail());
-                pstmt.setString(7, user.getCountry());
-                pstmt.setString(8, user.getCity());
-                pstmt.addBatch();
-                pstmt.execute();
-            } catch (Exception e) {
-                connection.rollback();
-                e.printStackTrace();
-            }
+            pstmt.setInt(1, user.getId());
+            pstmt.setString(2, user.getName());
+            pstmt.setString(3, user.getRole());
+            pstmt.setString(4, user.getLogin());
+            pstmt.setString(5, user.getPassword());
+            pstmt.setString(6, user.getEmail());
+            pstmt.setString(7, user.getCountry());
+            pstmt.setString(8, user.getCity());
+            pstmt.execute();
         } catch (SQLException ex) {
-            ex.getMessage();
+            log.info(ex.getMessage());
         }
     }
 
     public void update(User user) {
         try (Connection connection = source.getConnection();
              PreparedStatement pstmt = connection.prepareStatement("update myuser set name = ?,role = ?, login = ?,password=?, email = ?,country = ?,city = ? where id = ?");) {
-            try {
-                pstmt.setString(1, user.getName());
-                pstmt.setString(2, user.getRole());
-                pstmt.setString(3, user.getLogin());
-                pstmt.setString(4, user.getPassword());
-                pstmt.setString(5, user.getEmail());
-                pstmt.setString(6, user.getCountry());
-                pstmt.setString(7, user.getCity());
-                pstmt.setInt(8, user.getId());
-                pstmt.addBatch();
-                pstmt.execute();
-            } catch (Exception e) {
-                connection.rollback();
-                e.printStackTrace();
-            }
+            pstmt.setString(1, user.getName());
+            pstmt.setString(2, user.getRole());
+            pstmt.setString(3, user.getLogin());
+            pstmt.setString(4, user.getPassword());
+            pstmt.setString(5, user.getEmail());
+            pstmt.setString(6, user.getCountry());
+            pstmt.setString(7, user.getCity());
+            pstmt.setInt(8, user.getId());
+            pstmt.execute();
         } catch (SQLException ex) {
-            ex.getMessage();
+            log.info(ex.getMessage());
         }
     }
 
     public void delete(Integer index) {
         try (Connection connection = source.getConnection();
              PreparedStatement pstmt = connection.prepareStatement("DELETE FROM myuser WHERE id=?");) {
-            try {
-                pstmt.setInt(1, index);
-                pstmt.addBatch();
-                pstmt.execute();
-            } catch (Exception e) {
-                connection.rollback();
-                e.printStackTrace();
-            }
+            pstmt.setInt(1, index);
+            pstmt.execute();
         } catch (SQLException ex) {
-            ex.getMessage();
+            log.info(ex.getMessage());
         }
     }
 
     public List<User> findAll() {
         List<User> users = new CopyOnWriteArrayList();
         try (Connection connection = source.getConnection();
-             PreparedStatement pstmt = connection.prepareStatement("SELECT * FROM myuser");) {
-            try (ResultSet resultSet = pstmt.executeQuery();) {
-                User user = null;
-                while (resultSet.next()) {
-                    user = new User();
-                    user.setId(resultSet.getInt(1));
-                    user.setRole(resultSet.getString(2));
-                    user.setName(resultSet.getString(3));
-                    user.setLogin(resultSet.getString(4));
-                    user.setPassword(resultSet.getString(5));
-                    user.setEmail(resultSet.getString(6));
-                    user.setCreateDate(resultSet.getDate(7));
-                    user.setCountry(resultSet.getString(8));
-                    user.setCity(resultSet.getString(9));
-                    users.add(user);
-                }
-
-            } catch (Exception e) {
-                connection.rollback();
-                e.printStackTrace();
+             PreparedStatement pstmt = connection.prepareStatement("SELECT * FROM myuser");
+             ResultSet resultSet = pstmt.executeQuery();
+        ) {
+            User user = null;
+            while (resultSet.next()) {
+                user = new User();
+                user.setId(resultSet.getInt(1));
+                user.setRole(resultSet.getString(2));
+                user.setName(resultSet.getString(3));
+                user.setLogin(resultSet.getString(4));
+                user.setPassword(resultSet.getString(5));
+                user.setEmail(resultSet.getString(6));
+                user.setCreateDate(resultSet.getDate(7));
+                user.setCountry(resultSet.getString(8));
+                user.setCity(resultSet.getString(9));
+                users.add(user);
             }
         } catch (SQLException ex) {
-            ex.getMessage();
+            log.info(ex.getMessage());
         }
         return users;
     }
@@ -142,7 +112,6 @@ public class DBStore implements Store {
              PreparedStatement pstmt = connection.prepareStatement("SELECT * FROM myuser WHERE id=?");
         ) {
             pstmt.setInt(1, index);
-            pstmt.addBatch();
             pstmt.execute();
             try (ResultSet resultSet = pstmt.executeQuery();) {
                 while (resultSet.next()) {
@@ -159,10 +128,10 @@ public class DBStore implements Store {
                 }
             } catch (Exception e) {
                 connection.rollback();
-                e.printStackTrace();
+                log.info(e.getMessage());
             }
         } catch (SQLException ex) {
-            ex.getMessage();
+            log.info(ex.getMessage());
         }
         return user;
     }
@@ -175,7 +144,6 @@ public class DBStore implements Store {
         ) {
             pstmt.setString(1, login);
             pstmt.setString(2, password);
-            pstmt.addBatch();
             pstmt.execute();
             try (ResultSet resultSet = pstmt.executeQuery();) {
                 while (resultSet.next()) {
@@ -192,10 +160,10 @@ public class DBStore implements Store {
                 }
             } catch (Exception e) {
                 connection.rollback();
-                e.printStackTrace();
+                log.info(e.getMessage());
             }
         } catch (SQLException ex) {
-            ex.getMessage();
+            log.info(ex.getMessage());
         }
         return user;
     }
@@ -214,10 +182,10 @@ public class DBStore implements Store {
                 }
             } catch (Exception e) {
                 connection.rollback();
-                e.printStackTrace();
+                log.info(e.getMessage());
             }
         } catch (SQLException ex) {
-            ex.getMessage();
+            log.info(ex.getMessage());
         }
         return countries;
     }
@@ -237,12 +205,11 @@ public class DBStore implements Store {
                 }
             } catch (Exception e) {
                 connection.rollback();
-                e.printStackTrace();
+                log.info(e.getMessage());
             }
         } catch (SQLException ex) {
-            ex.getMessage();
+            log.info(ex.getMessage());
         }
         return cities;
     }
-
 }
